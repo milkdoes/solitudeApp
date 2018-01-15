@@ -198,5 +198,8 @@ public class Door : MonoBehaviour
         }
 
         RotationPending = false;
+
+		// Broadcast that door has moved.
+		Messenger.Broadcast (GameEvent.DOOR_MOVED);
     }
 }

@@ -43,7 +43,7 @@ RenderSettings:
 LightmapSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 11
-  m_GIWorkflowMode: 0
+  m_GIWorkflowMode: 1
   m_GISettings:
     serializedVersion: 2
     m_BounceScale: 1
@@ -86,7 +86,8 @@ LightmapSettings:
     m_PVRFilteringAtrousColorSigma: 1
     m_PVRFilteringAtrousNormalSigma: 1
     m_PVRFilteringAtrousPositionSigma: 1
-  m_LightingDataAsset: {fileID: 0}
+  m_LightingDataAsset: {fileID: 112000014, guid: cc58732d8677afb4ba6bff9d819a6bf6,
+    type: 2}
   m_UseShadowmask: 0
 --- !u!196 &4
 NavMeshSettings:
@@ -14423,6 +14424,7 @@ GameObject:
   - component: {fileID: 2119849617}
   - component: {fileID: 2119849622}
   - component: {fileID: 2119849623}
+  - component: {fileID: 2119849624}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -14551,6 +14553,17 @@ MonoBehaviour:
   CrosshairPrefabInstance: {fileID: 0}
   DebugRayColor: {r: 0, g: 0, b: 0, a: 0}
   Opacity: 1
+--- !u!114 &2119849624
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2119849616}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c91da040a8116f04ebb5a54a0a3823be, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!28 &2123929352
 Texture2D:
   m_ObjectHideFlags: 0
