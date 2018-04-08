@@ -6,116 +6,129 @@ using UnityEngine;
 
 public class Detection : MonoBehaviour
 {
-    // GENERAL SETTINGS
-    [Header("General Settings")]
-    [Tooltip("How close the player has to be in order to be able to open/close the door.")]
-    public float Reach = 4.0F;
-    [HideInInspector] public bool InReach;
+	// GENERAL SETTINGS
+	[Header ("General Settings")]
+	[Tooltip ("How close the player has to be in order to be able to open/close the door.")]
+	public float Reach = 4.0F;
+	[HideInInspector] public bool InReach;
 	// Key to press for door to move.
-    public string Character = "e";
+	public string Character = "e";
 
 	// Button to press for door to move.
 	public string doorMoveButton = "Fire1";
 
-    // UI SETTINGS
-    [Header("UI Settings")]
-    [Tooltip("The image or text that will be shown whenever the player is in reach of the door.")]
-    public GameObject TextPrefab; // A text element to display when the player is in reach of the door
-    [HideInInspector] public GameObject TextPrefabInstance; // A copy of the text prefab to prevent data corruption
-    [HideInInspector] public bool TextActive;
+	// UI SETTINGS
+	[Header ("UI Settings")]
+	[Tooltip ("The image or text that will be shown whenever the player is in reach of the door.")]
+	public GameObject TextPrefab;
+	// A text element to display when the player is in reach of the door
+	[HideInInspector] public GameObject TextPrefabInstance;
+	// A copy of the text prefab to prevent data corruption
+	[HideInInspector] public bool TextActive;
 
-    [Tooltip("The image or text that is shown in the middle of the the screen.")]
-    public GameObject CrosshairPrefab;
-    [HideInInspector] public GameObject CrosshairPrefabInstance; // A copy of the crosshair prefab to prevent data corruption
+	[Tooltip ("The image or text that is shown in the middle of the the screen.")]
+	public GameObject CrosshairPrefab;
+	[HideInInspector] public GameObject CrosshairPrefabInstance;
+	// A copy of the crosshair prefab to prevent data corruption
 
-    // DEBUG SETTINGS
-    [Header("Debug Settings")]
-    [Tooltip("The color of the debugray that will be shown in the scene view window when playing the game.")]
-    public Color DebugRayColor;
-    [Tooltip("The opacity of the debugray.")]
-    [Range(0.0F, 1.0F)]
-    public float Opacity = 1.0F;
+	// DEBUG SETTINGS
+	[Header ("Debug Settings")]
+	[Tooltip ("The color of the debugray that will be shown in the scene view window when playing the game.")]
+	public Color DebugRayColor;
+	[Tooltip ("The opacity of the debugray.")]
+	[Range (0.0F, 1.0F)]
+	public float Opacity = 1.0F;
 
-    void Start()
-    {
-        gameObject.name = "Player";
-        gameObject.tag = "Player";
+	void Start ()
+	{
+		gameObject.name = "Player";
+		gameObject.tag = "Player";
 
-        if (CrosshairPrefab == null) Debug.Log("<color=yellow><b>No CrosshairPrefab was found.</b></color>"); // Return an error if no crosshair was specified
+		if (CrosshairPrefab == null)
+			Debug.Log ("<color=yellow><b>No CrosshairPrefab was found.</b></color>"); // Return an error if no crosshair was specified
 
-        else
-        {
-            CrosshairPrefabInstance = Instantiate(CrosshairPrefab); // Display the crosshair prefab
-            CrosshairPrefabInstance.transform.SetParent(transform, true); // Make the player the parent object of the crosshair prefab
-        }
+        else {
+			CrosshairPrefabInstance = Instantiate (CrosshairPrefab); // Display the crosshair prefab
+			CrosshairPrefabInstance.transform.SetParent (transform, true); // Make the player the parent object of the crosshair prefab
+		}
 
-        if (TextPrefab == null) Debug.Log("<color=yellow><b>No TextPrefab was found.</b></color>"); // Return an error if no text element was specified
+		if (TextPrefab == null)
+			Debug.Log ("<color=yellow><b>No TextPrefab was found.</b></color>"); // Return an error if no text element was specified
 
-        DebugRayColor.a = Opacity; // Set the alpha value of the DebugRayColor
-    }
+		DebugRayColor.a = Opacity; // Set the alpha value of the DebugRayColor
+	}
 
-    void Update()
-    {
-        // Set origin of ray to 'center of screen' and direction of ray to 'cameraview'
-        Ray ray = Camera.main.ViewportPointToRay(new Vector3(0.5F, 0.5F, 0F));
+	void Update ()
+	{
+		// Set origin of ray to 'center of screen' and direction of ray to 'cameraview'
+		Ray ray = Camera.main.ViewportPointToRay (new Vector3 (0.5F, 0.5F, 0F));
 
-        RaycastHit hit; // Variable reading information about the collider hit
+		RaycastHit hit; // Variable reading information about the collider hit
 
-        // Cast ray from center of the screen towards where the player is looking
-        if (Physics.Raycast(ray, out hit, Reach))
-        {
-            if (hit.collider.tag == "Door")
-            {
-                InReach = true;
+		// Cast ray from center of the screen towards where the player is looking
+		if (Physics.Raycast (ray, out hit, Reach)) {
+			switch (hit.collider.tag) {
+			case "Door":
+				InReach = true;
 
-                // Display the UI element when the player is in reach of the door
-                if (TextActive == false && TextPrefab != null)
-                {
-                    TextPrefabInstance = Instantiate(TextPrefab);
-                    TextActive = true;
-                    TextPrefabInstance.transform.SetParent(transform, true); // Make the player the parent object of the text element
-                }
+				// Display the UI element when the player is in reach of the door
+				if (TextActive == false && TextPrefab != null) {
+					TextPrefabInstance = Instantiate (TextPrefab);
+					TextActive = true;
+					TextPrefabInstance.transform.SetParent (transform, true); // Make the player the parent object of the text element
+				}
 
-                // Give the object that was hit the name 'Door'
-                GameObject Door = hit.transform.gameObject;
+				// Give the object that was hit the name 'Door'
+				GameObject Door = hit.transform.gameObject;
 
-                // Get access to the 'Door' script attached to the object that was hit
-                Door dooropening = Door.GetComponent<Door>();
+				// Get access to the 'Door' script attached to the object that was hit
+				Door dooropening = Door.GetComponent<Door> ();
 
 				// Rotate door if input is the one needed.
-				if (Input.GetKey(Character) || Input.GetButtonDown(doorMoveButton))
-                {
-                    // Open/close the door by running the 'Open' function found in the 'Door' script
-                    if (dooropening.RotationPending == false) StartCoroutine(hit.collider.GetComponent<Door>().Move());
-                }
-            }
+				if (Input.GetKey (Character) || Input.GetButtonDown (doorMoveButton)) {
+					// Open/close the door by running the 'Open' function found in the 'Door' script
+					if (dooropening.RotationPending == false)
+						StartCoroutine (hit.collider.GetComponent<Door> ().Move ());
+				}
+				break;
 
-            else
-            {
-                InReach = false;
+			case "Bed":
+				InReach = true;
 
-                // Destroy the UI element when Player is no longer in reach of the door
-                if (TextActive == true)
-                {
-                    DestroyImmediate(TextPrefabInstance);
-                    TextActive = false;
-                }
-            }
-        }
+				// Put player in bed if input is the one needed.
+				if (Input.GetButtonDown (doorMoveButton)) {
+					// Get current position of bed.
+					Vector3 bedPosition = new Vector3(0.748059f, 1.118f, -1.43880f);
 
-        else
-        {
-            InReach = false;
+					// Move player character to bed position.
+					CharacterController character = GetComponent<CharacterController>();
+					character.transform.position = bedPosition;
+					character.transform.up = Vector3.up;
+					UnityEngine.Debug.Log ("Player moved.");
+				}
+				break;
 
-            // Destroy the UI element when Player is no longer in reach of the door
-            if (TextActive == true)
-            {
-                DestroyImmediate(TextPrefabInstance);
-                TextActive = false;
-            }
-        }
+			default:
+				InReach = false;
 
-        //Draw the ray as a colored line for debugging purposes.
-        Debug.DrawRay(ray.origin, ray.direction * Reach, DebugRayColor);
-    }
+				// Destroy the UI element when Player is no longer in reach of the door
+				if (TextActive == true) {
+					DestroyImmediate (TextPrefabInstance);
+					TextActive = false;
+				}
+				break;
+			}
+		} else {
+			InReach = false;
+
+			// Destroy the UI element when Player is no longer in reach of the door
+			if (TextActive == true) {
+				DestroyImmediate (TextPrefabInstance);
+				TextActive = false;
+			}
+		}
+
+		//Draw the ray as a colored line for debugging purposes.
+		Debug.DrawRay (ray.origin, ray.direction * Reach, DebugRayColor);
+	}
 }
