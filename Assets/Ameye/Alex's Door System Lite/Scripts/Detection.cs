@@ -11,7 +11,11 @@ public class Detection : MonoBehaviour
     [Tooltip("How close the player has to be in order to be able to open/close the door.")]
     public float Reach = 4.0F;
     [HideInInspector] public bool InReach;
+	// Key to press for door to move.
     public string Character = "e";
+
+	// Button to press for door to move.
+	public string doorMoveButton = "Fire1";
 
     // UI SETTINGS
     [Header("UI Settings")]
@@ -78,7 +82,8 @@ public class Detection : MonoBehaviour
                 // Get access to the 'Door' script attached to the object that was hit
                 Door dooropening = Door.GetComponent<Door>();
 
-                if (Input.GetKey(Character))
+				// Rotate door if input is the one needed.
+				if (Input.GetKey(Character) || Input.GetButtonDown(doorMoveButton))
                 {
                     // Open/close the door by running the 'Open' function found in the 'Door' script
                     if (dooropening.RotationPending == false) StartCoroutine(hit.collider.GetComponent<Door>().Move());
