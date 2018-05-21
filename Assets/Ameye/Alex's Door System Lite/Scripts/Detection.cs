@@ -104,7 +104,9 @@ public class Detection : MonoBehaviour
 					CharacterController character = GetComponent<CharacterController>();
 					character.transform.position = bedPosition;
 					character.transform.up = Vector3.up;
-					UnityEngine.Debug.Log ("Player moved.");
+
+					// Raise event for bed.
+					Messenger.Broadcast(GameEvent.IN_BED);
 				}
 				break;
 
